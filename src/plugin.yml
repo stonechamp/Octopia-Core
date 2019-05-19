@@ -1,0 +1,21 @@
+name: OctopiaCore
+main: me.champ.octopia.Core
+description: Core plugin for Octopia MC
+version: 0.1
+api-version: 1.12.2
+depends: [SilkSpawner, Vault]
+commands:
+  oc:
+    usage: /oc
+  ochelp:
+    usage: /ochelp
+  ptset:
+    usage: /ptset
+  ocshop:
+    usage: /ocshop
+  ptcheck:
+    usage: /ptcheck
+  ptreset:
+    usage: /ptreset
+  ocstats:
+    usage: /ocstats
