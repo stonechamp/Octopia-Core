@@ -10,6 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import me.champ.octopia.Core;
+import me.champ.octopia.guis.PlaytimeLeaderBoard;
 
 
 public class PlaytimeCommand implements CommandExecutor {
@@ -18,6 +19,15 @@ public class PlaytimeCommand implements CommandExecutor {
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String name, String[] args) {
+		
+		if (cmd.getName().equalsIgnoreCase("ptleaderboard")) {
+			if (!(sender instanceof Player)) {
+				sender.sendMessage(ChatColor.RED + "Only players can run this command.");
+			}
+			Player player = (Player) sender;
+			PlaytimeLeaderBoard ptb = new PlaytimeLeaderBoard();
+			ptb.open(player);
+		} 
 		
 		if (cmd.getName().equalsIgnoreCase("ptreset")) {
 			

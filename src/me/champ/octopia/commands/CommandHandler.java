@@ -30,23 +30,22 @@ public class CommandHandler implements CommandExecutor {
 		
 		
 		this.commands.add(new HelpCommand());
-		this.commands.add(new ShopCommand());
-		this.commands.add(new SpawnerCommand());
 	}
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String name, String[] args) {
 		
-		if (!(sender instanceof Player)) {
-			sender.sendMessage(ChatColor.RED + "Nice try! Only players can run this command ;)");
-			return true;
-		}
+//		if (!(sender instanceof Player)) {
+//			sender.sendMessage(ChatColor.RED + "Nice try! Only players can run this command ;)");
+//			return true;
+//		}
 		
-		Player player = (Player) sender;
+		
 		
 		if (command.getName().equalsIgnoreCase(base)) {
 			
 			if (args.length == 0) {
+				Player player = (Player) sender;
 				player.performCommand("oc help");
 				return true;
 			}
@@ -54,11 +53,17 @@ public class CommandHandler implements CommandExecutor {
 			SubCommand sub = this.get(args[0]);
 			
 			if (sub == null) {
+				Player player = (Player) sender;
 				player.sendMessage(ChatColor.RED + "Invalid command");
 			}
 			
+            try {
+            	sub.onCommand(sender,args);
+            } catch (Exception e){
+            	sender.sendMessage(ChatColor.RED + "Please use /ochelp for a list of valid commands.");
+            	e.printStackTrace();
+            }
             
-            sub.onCommand(player,args);
             
 		}	
 		return true;

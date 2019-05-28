@@ -20,7 +20,7 @@ public class Help implements CommandExecutor {
 		
 		Player player = (Player) sender;
 		
-		if (command.getName().equalsIgnoreCase("ochelp")) {
+		if (command.getName().equalsIgnoreCase("help")) {
 			HelpGui helpGui = new HelpGui();
 			player.openInventory(helpGui.helpInv);
 			

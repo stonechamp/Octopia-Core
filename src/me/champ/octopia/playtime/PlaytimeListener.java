@@ -80,6 +80,11 @@ public class PlaytimeListener implements Listener {
 				plugin.afkPool.remove(e.getPlayer().getUniqueId());
 				plugin.afkPool.put(e.getPlayer().getUniqueId(), 0);
 			}
+			
+			if (plugin.isAfk(e.getPlayer().getUniqueId()) == false) {
+				PlaytimeConfig.getPlaytimeConfig().set("players." + e.getPlayer().getUniqueId() + ".playtime", e.getPlayer().getStatistic(Statistic.PLAY_ONE_TICK));
+				PlaytimeConfig.save();
+			}
 		}catch(NullPointerException ex) {
 			
 		}

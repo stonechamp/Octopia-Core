@@ -1,14 +1,20 @@
 package me.champ.octopia;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Statistic;
+import org.bukkit.block.Block;
+import org.bukkit.block.CreatureSpawner;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -18,18 +24,10 @@ import de.candc.SilkSpawners;
 import de.candc.api.SilkSpawnersAPI;
 import me.champ.octopia.commands.CommandHandler;
 import me.champ.octopia.commands.generic.Help;
-import me.champ.octopia.commands.generic.OcShop;
-import me.champ.octopia.entity.EntityListener;
-import me.champ.octopia.entity.spawners.ClickListeners;
-import me.champ.octopia.entity.spawners.GUI;
-import me.champ.octopia.entity.spawners.OnSpawnerPlaceAndBreak;
-import me.champ.octopia.entity.spawners.SpawnerSpawnListener;
 import me.champ.octopia.playtime.PlaytimeCommand;
 import me.champ.octopia.playtime.PlaytimeConfig;
 import me.champ.octopia.playtime.PlaytimeListener;
 import me.champ.octopia.playtime.PlaytimeRewards;
-import me.champ.octopia.shop.Shop;
-import me.champ.octopia.shop.ShopClickListener;
 import me.champ.octopia.stats.StatsCommand;
 import me.champ.octopia.stats.StatsConfig;
 import me.champ.octopia.stats.StatsListener;
@@ -40,10 +38,8 @@ import net.milkbowl.vault.permission.Permission;
 public class Core extends JavaPlugin {
 	
 	public static Core plugin;
-	public Shop shop;
 	public CommandHandler commandHandler;
 	public SilkSpawnersAPI silkSpawnerApi;
-	public GUI upgradeMenu;
 	private Economy econ;
     private Permission perms;
     private Chat chat;
@@ -56,13 +52,10 @@ public class Core extends JavaPlugin {
 	
 	public void onEnable() {
 		plugin = this;
-		silkSpawnerApi = SilkSpawners.getApi();
 		
 		this.registerEvents();
 		this.registerCommands();
-		upgradeMenu = new GUI();
-		
-		shop = new Shop();
+
 		commandHandler = new CommandHandler();
 		commandHandler.init();
 		
@@ -78,12 +71,17 @@ public class Core extends JavaPlugin {
         PlaytimeConfig.setup();
         StatsConfig.setup();
         starPlaytimeThread();
+        
+
+        
+        this.getConfig().options().copyDefaults(true);
+        saveDefaultConfig();
 	}
 	
 	
-
+	@Override
 	public void onDisable() {
-		
+
 	}
 	
 	public static Core getInstance() {
@@ -91,23 +89,18 @@ public class Core extends JavaPlugin {
 	}
 	
 	public void registerEvents() {
-		this.getServer().getPluginManager().registerEvents(new EntityListener(), this);
-		this.getServer().getPluginManager().registerEvents(new ShopClickListener(), this);
-		this.getServer().getPluginManager().registerEvents(new ClickListeners(), this);
-		this.getServer().getPluginManager().registerEvents(new OnSpawnerPlaceAndBreak(), this);
-		this.getServer().getPluginManager().registerEvents(new SpawnerSpawnListener(), this);
 		this.getServer().getPluginManager().registerEvents(new CoreListener(), this);
 		this.getServer().getPluginManager().registerEvents(new PlaytimeListener(), this);
 		this.getServer().getPluginManager().registerEvents(new StatsListener(), this);
 	}
 	
 	public void registerCommands() {
-		getCommand("ochelp").setExecutor(new Help());
+		getCommand("help").setExecutor(new Help());
 		getCommand("ptset").setExecutor(new PlaytimeCommand());
 		getCommand("ptcheck").setExecutor(new PlaytimeCommand());
 		getCommand("ptreset").setExecutor(new PlaytimeCommand());
-		getCommand("ocshop").setExecutor(new OcShop());
 		getCommand("ocstats").setExecutor(new StatsCommand());
+		getCommand("ptleaderboard").setExecutor(new PlaytimeCommand());
 		
 	}
 	
@@ -207,10 +200,7 @@ public class Core extends JavaPlugin {
     public Chat getChat() {
         return chat;
     }
-	
-	public Shop getShop() {
-		return shop;
-	}
+
 	
 	
 

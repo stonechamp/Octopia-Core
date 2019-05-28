@@ -12,6 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 
 import net.md_5.bungee.api.ChatColor;
@@ -19,6 +20,13 @@ import net.md_5.bungee.api.ChatColor;
 public class CoreListener implements Listener {
 	
 	private Core plugin = Core.getInstance();
+	
+	@EventHandler
+	public void onIslandDisband(PlayerCommandPreprocessEvent event) {
+		if (event.getMessage().toLowerCase().startsWith("/island disband") || event.getMessage().toLowerCase().startsWith("/is disband")) {
+			event.getPlayer().chat("/spawn");
+		}
+	}
 	
 	@EventHandler
 	public void onClick(InventoryClickEvent event) {
@@ -32,9 +40,7 @@ public class CoreListener implements Listener {
 			}
 			
 			if (event.getRawSlot() == 20) {
-				player.sendMessage(ChatColor.GOLD + " " + ChatColor.BOLD + "Island Commands" + ChatColor.WHITE + " (v 0.1)");
-				player.sendMessage(ChatColor.GRAY + "----------------------------");
-				player.sendMessage(ChatColor.WHITE + "/island" + ChatColor.GRAY + " - Access the island panel. ");
+				player.chat("/island help");
 				player.closeInventory();
 			}
 			
